@@ -9,10 +9,11 @@ import (
 )
 
 type Config struct {
-	Provider  string          `yaml:"provider"`
-	Anthropic AnthropicConfig `yaml:"anthropic"`
-	OpenAI    OpenAIConfig    `yaml:"openai"`
-	Ollama    OllamaConfig    `yaml:"ollama"`
+	Provider     string          `yaml:"provider"`
+	SystemPrompt string          `yaml:"system_prompt,omitempty"`
+	Anthropic    AnthropicConfig `yaml:"anthropic"`
+	OpenAI       OpenAIConfig    `yaml:"openai"`
+	Ollama       OllamaConfig    `yaml:"ollama"`
 }
 
 type AnthropicConfig struct {

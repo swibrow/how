@@ -20,11 +20,13 @@ var (
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use:   "howdoi [question]",
-		Short: "Smart terminal cheatsheet — ask a question, get a command",
-		Long:  "Ask a natural language question and get back a shell command with explanation.",
-		Args:  cobra.MinimumNArgs(1),
-		RunE:  run,
+		Use:           "howdoi [question]",
+		Short:         "Smart terminal cheatsheet — ask a question, get a command",
+		Long:          "Ask a natural language question and get back a shell command with explanation.",
+		Args:          cobra.MinimumNArgs(1),
+		RunE:          run,
+		SilenceUsage:  true,
+		SilenceErrors: true,
 	}
 
 	rootCmd.Flags().BoolVarP(&flagYes, "yes", "y", false, "Run the command without confirmation")
@@ -86,7 +88,7 @@ func run(cmd *cobra.Command, args []string) error {
 	}
 
 	ctx := context.Background()
-	response, err := provider.Complete(ctx, prompt.SystemPrompt, question)
+	response, err := provider.Complete(ctx, prompt.SystemPrompt(cfg.SystemPrompt), question)
 	if err != nil {
 		ui.DisplayError(fmt.Sprintf("LLM request failed: %v", err))
 		return err

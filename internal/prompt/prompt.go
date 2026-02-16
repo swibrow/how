@@ -1,6 +1,8 @@
 package prompt
 
-const SystemPrompt = `You are a terminal command expert. The user will ask how to do something on the command line. Respond with the most appropriate command and a brief explanation.
+import "runtime"
+
+const baseSystemPrompt = `You are a terminal command expert. The user will ask how to do something on the command line. Respond with the most appropriate command and a brief explanation.
 
 You MUST respond in exactly this format:
 
@@ -15,3 +17,30 @@ Rules:
 - Do not include any text outside the COMMAND/EXPLANATION format
 - If the question is ambiguous, pick the most common interpretation
 - Use placeholder values like <filename> only when the user hasn't specified one`
+
+// SystemPrompt returns the system prompt with OS-specific context appended.
+// If customPrompt is non-empty, it replaces the default base prompt.
+func SystemPrompt(customPrompt string) string {
+	base := baseSystemPrompt
+	if customPrompt != "" {
+		base = customPrompt
+	}
+	osHint := osContext()
+	if osHint == "" {
+		return base
+	}
+	return base + "\n- " + osHint
+}
+
+func osContext() string {
+	switch runtime.GOOS {
+	case "darwin":
+		return "The user is on macOS. Prefer macOS-compatible tools (e.g. lsof over ss, pbcopy over xclip, open over xdg-open). GNU coreutils may not be installed."
+	case "linux":
+		return "The user is on Linux. Prefer standard GNU/Linux tools."
+	case "windows":
+		return "The user is on Windows. Prefer PowerShell or cmd.exe compatible commands."
+	default:
+		return ""
+	}
+}
