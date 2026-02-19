@@ -19,6 +19,12 @@ $ howdoi find all go files modified in the last 24 hours
 
 ## Installation
 
+### Homebrew
+
+```sh
+brew install swibrow/tap/howdoi
+```
+
 ### From source
 
 ```sh

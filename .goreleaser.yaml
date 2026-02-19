@@ -21,6 +21,18 @@ archives:
       - goos: windows
         format: zip
 
+brews:
+  - repository:
+      owner: swibrow
+      name: homebrew-tap
+    homepage: https://github.com/swibrow/howdoi
+    description: "Smart terminal cheatsheet — ask a question, get a command"
+    license: "MIT"
+    install: |
+      bin.install "howdoi"
+    test: |
+      system "#{bin}/howdoi", "--help"
+
 changelog:
   sort: asc
   filters:
