@@ -7,9 +7,11 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
@@ -115,9 +117,82 @@ func RunCommand(command string) error {
 				fmt.Fprintf(os.Stderr, "  %s\n", installSuggestion(cmdName))
 			}
 		}
+	} else {
+		addToShellHistory(command)
 	}
 	return err
 }
+
+// addToShellHistory appends the command to the user's shell history file.
+func addToShellHistory(command string) {
+	shell := os.Getenv("SHELL")
+	histFile := shellHistoryFile(shell)
+	if histFile == "" {
+		return
+	}
+
+	f, err := os.OpenFile(histFile, os.O_APPEND|os.O_WRONLY, 0o600)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+
+	if strings.Contains(shell, "zsh") && isZshExtendedHistory(histFile) {
+		fmt.Fprintf(f, ": %d:0;%s\n", time.Now().Unix(), command)
+	} else {
+		fmt.Fprintf(f, "%s\n", command)
+	}
+}
+
+// shellHistoryFile returns the path to the shell history file,
+// using $HISTFILE if set, otherwise falling back to shell-specific defaults.
+func shellHistoryFile(shell string) string {
+	if histFile := os.Getenv("HISTFILE"); histFile != "" {
+		return histFile
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	switch {
+	case strings.Contains(shell, "zsh"):
+		return filepath.Join(home, ".zsh_history")
+	case strings.Contains(shell, "bash"):
+		return filepath.Join(home, ".bash_history")
+	default:
+		return ""
+	}
+}
+
+// isZshExtendedHistory checks whether the history file uses zsh extended
+// history format (": timestamp:duration;command") by sampling the tail.
+func isZshExtendedHistory(histFile string) bool {
+	f, err := os.Open(histFile)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	info, err := f.Stat()
+	if err != nil || info.Size() == 0 {
+		return false
+	}
+
+	offset := info.Size() - 1024
+	if offset < 0 {
+		offset = 0
+	}
+
+	buf := make([]byte, 1024)
+	n, err := f.ReadAt(buf, offset)
+	if err != nil && n == 0 {
+		return false
+	}
+
+	return zshExtendedRe.Match(buf[:n])
+}
+
+var zshExtendedRe = regexp.MustCompile(`(?m)^: \d+:\d+;`)
 
 var (
 	hintStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f9e2af")) // Yellow

@@ -2,6 +2,7 @@ package ui
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"runtime"
@@ -145,6 +146,116 @@ func TestInstallSuggestion(t *testing.T) {
 			t.Errorf("expected ripgrep in suggestion, got: %s", suggestion)
 		}
 	}
+}
+
+func TestShellHistoryFile(t *testing.T) {
+	cases := []struct {
+		name     string
+		shell    string
+		histFile string
+		wantEnd  string // expected suffix of the result
+	}{
+		{name: "zsh default", shell: "/bin/zsh", histFile: "", wantEnd: ".zsh_history"},
+		{name: "bash default", shell: "/bin/bash", histFile: "", wantEnd: ".bash_history"},
+		{name: "HISTFILE override", shell: "/bin/zsh", histFile: "/tmp/my_history", wantEnd: "/tmp/my_history"},
+		{name: "unsupported shell", shell: "/bin/fish", histFile: "", wantEnd: ""},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Setenv("SHELL", tc.shell)
+			t.Setenv("HISTFILE", tc.histFile)
+
+			got := shellHistoryFile(tc.shell)
+			if tc.wantEnd == "" {
+				if got != "" {
+					t.Errorf("shellHistoryFile(%q) = %q, want empty", tc.shell, got)
+				}
+			} else if !strings.HasSuffix(got, tc.wantEnd) {
+				t.Errorf("shellHistoryFile(%q) = %q, want suffix %q", tc.shell, got, tc.wantEnd)
+			}
+		})
+	}
+}
+
+func TestAddToShellHistory(t *testing.T) {
+	// Create a temp file to use as the history file
+	tmpFile, err := os.CreateTemp(t.TempDir(), "history")
+	if err != nil {
+		t.Fatal(err)
+	}
+	tmpFile.Close()
+
+	t.Setenv("SHELL", "/bin/bash")
+	t.Setenv("HISTFILE", tmpFile.Name())
+
+	addToShellHistory("echo hello")
+
+	data, err := os.ReadFile(tmpFile.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), "echo hello\n") {
+		t.Errorf("history file should contain 'echo hello', got: %q", string(data))
+	}
+}
+
+func TestAddToShellHistoryZshExtended(t *testing.T) {
+	tmpFile, err := os.CreateTemp(t.TempDir(), "zsh_history")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Write extended history format to the file
+	fmt.Fprintf(tmpFile, ": 1700000000:0;ls -la\n")
+	tmpFile.Close()
+
+	t.Setenv("SHELL", "/bin/zsh")
+	t.Setenv("HISTFILE", tmpFile.Name())
+
+	addToShellHistory("git status")
+
+	data, err := os.ReadFile(tmpFile.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	content := string(data)
+	if !strings.Contains(content, ":0;git status\n") {
+		t.Errorf("expected extended zsh history entry, got: %q", content)
+	}
+}
+
+func TestIsZshExtendedHistory(t *testing.T) {
+	t.Run("extended format", func(t *testing.T) {
+		f, _ := os.CreateTemp(t.TempDir(), "hist")
+		fmt.Fprintf(f, ": 1700000000:0;ls\n: 1700000001:0;pwd\n")
+		f.Close()
+		if !isZshExtendedHistory(f.Name()) {
+			t.Error("expected true for extended history format")
+		}
+	})
+
+	t.Run("plain format", func(t *testing.T) {
+		f, _ := os.CreateTemp(t.TempDir(), "hist")
+		fmt.Fprintf(f, "ls\npwd\n")
+		f.Close()
+		if isZshExtendedHistory(f.Name()) {
+			t.Error("expected false for plain history format")
+		}
+	})
+
+	t.Run("empty file", func(t *testing.T) {
+		f, _ := os.CreateTemp(t.TempDir(), "hist")
+		f.Close()
+		if isZshExtendedHistory(f.Name()) {
+			t.Error("expected false for empty file")
+		}
+	})
+
+	t.Run("nonexistent file", func(t *testing.T) {
+		if isZshExtendedHistory("/tmp/nonexistent_history_file_xyz") {
+			t.Error("expected false for nonexistent file")
+		}
+	})
 }
 
 func TestRunCommandNotFound(t *testing.T) {
