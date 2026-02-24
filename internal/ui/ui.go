@@ -43,7 +43,21 @@ func ParseResponse(response string) Result {
 		}
 	}
 
+	result.Command = stripBackticks(result.Command)
 	return result
+}
+
+// stripBackticks removes backtick wrapping that LLMs sometimes add.
+func stripBackticks(cmd string) string {
+	if strings.HasPrefix(cmd, "```") {
+		cmd = strings.TrimPrefix(cmd, "```")
+		cmd = strings.TrimSuffix(cmd, "```")
+	} else if strings.HasPrefix(cmd, "`") && strings.HasSuffix(cmd, "`") {
+		cmd = cmd[1 : len(cmd)-1]
+	} else if strings.HasPrefix(cmd, "`") {
+		cmd = strings.TrimPrefix(cmd, "`")
+	}
+	return strings.TrimSpace(cmd)
 }
 
 // Display shows the formatted result to the user.

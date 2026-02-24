@@ -57,6 +57,44 @@ func TestParseResponseExtraWhitespace(t *testing.T) {
 	}
 }
 
+func TestParseResponseStripsBackticks(t *testing.T) {
+	cases := []struct {
+		name     string
+		response string
+		wantCmd  string
+	}{
+		{
+			name:     "single backticks",
+			response: "COMMAND: `ls -la`\nEXPLANATION: List files",
+			wantCmd:  "ls -la",
+		},
+		{
+			name:     "triple backticks",
+			response: "COMMAND: ```ls -la```\nEXPLANATION: List files",
+			wantCmd:  "ls -la",
+		},
+		{
+			name:     "leading backtick only",
+			response: "COMMAND: `gh api -X GET /repos/owner/repo/actions\nEXPLANATION: Get actions",
+			wantCmd:  "gh api -X GET /repos/owner/repo/actions",
+		},
+		{
+			name:     "no backticks unchanged",
+			response: "COMMAND: ls -la\nEXPLANATION: List files",
+			wantCmd:  "ls -la",
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := ParseResponse(tc.response)
+			if result.Command != tc.wantCmd {
+				t.Errorf("command: got %q, want %q", result.Command, tc.wantCmd)
+			}
+		})
+	}
+}
+
 func TestDisplayQuiet(t *testing.T) {
 	result := Result{
 		Command:     "echo hello",
