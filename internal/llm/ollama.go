@@ -6,7 +6,7 @@ import (
 
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
-	"github.com/swibrow/howdoi/internal/config"
+	"github.com/swibrow/how/internal/config"
 )
 
 type Ollama struct {

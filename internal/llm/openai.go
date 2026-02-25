@@ -6,7 +6,7 @@ import (
 
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
-	"github.com/swibrow/howdoi/internal/config"
+	"github.com/swibrow/how/internal/config"
 )
 
 type OpenAI struct {
@@ -16,7 +16,7 @@ type OpenAI struct {
 
 func NewOpenAI(cfg config.OpenAIConfig) (*OpenAI, error) {
 	if cfg.APIKey == "" {
-		return nil, fmt.Errorf("openai API key not set (set OPENAI_API_KEY or configure in ~/.config/howdoi/config.yaml)")
+		return nil, fmt.Errorf("openai API key not set (set OPENAI_API_KEY or configure in ~/.config/how/config.yaml)")
 	}
 
 	client := openai.NewClient(option.WithAPIKey(cfg.APIKey))

@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-howdoi
+how
 dist/
 
 # Test binary, built with `go test -c`

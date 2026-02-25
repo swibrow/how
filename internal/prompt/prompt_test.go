@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/swibrow/howdoi/internal/memory"
+	"github.com/swibrow/how/internal/memory"
 )
 
 func TestSystemPromptNotEmpty(t *testing.T) {

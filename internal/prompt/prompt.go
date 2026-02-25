@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/swibrow/howdoi/internal/memory"
+	"github.com/swibrow/how/internal/memory"
 )
 
 const baseSystemPrompt = `You are a terminal command expert. The user will ask how to do something on the command line. Respond with the most appropriate command and a brief explanation.

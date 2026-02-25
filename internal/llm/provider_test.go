@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/swibrow/howdoi/internal/config"
+	"github.com/swibrow/how/internal/config"
 )
 
 func TestNewProviderUnknown(t *testing.T) {

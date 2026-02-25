@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/swibrow/howdoi/internal/config"
+	"github.com/swibrow/how/internal/config"
 )
 
 // Provider defines the interface for LLM backends.

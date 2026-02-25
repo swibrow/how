@@ -1,9 +1,9 @@
-# howdoi
+# how
 
 A smart terminal cheatsheet — ask a natural language question, get back a shell command.
 
 ```
-$ howdoi find all go files modified in the last 24 hours
+$ how find all go files modified in the last 24 hours
 
   $ find . -name '*.go' -mtime -1
   Finds all .go files modified within the last 24 hours
@@ -22,30 +22,30 @@ $ howdoi find all go files modified in the last 24 hours
 ### Homebrew
 
 ```sh
-brew install swibrow/tap/howdoi
+brew install swibrow/tap/how
 ```
 
 ### From source
 
 ```sh
-go install github.com/swibrow/howdoi@latest
+go install github.com/swibrow/how@latest
 ```
 
 ### From releases
 
-Download a prebuilt binary from [Releases](https://github.com/swibrow/howdoi/releases).
+Download a prebuilt binary from [Releases](https://github.com/swibrow/how/releases).
 
 ## Usage
 
 ```sh
 # Ask a question
-howdoi reverse a string in bash
+how reverse a string in bash
 
 # Run the suggested command immediately
-howdoi -y list listening ports
+how -y list listening ports
 
 # Output only the command (useful for piping)
-howdoi -q convert png to jpg with imagemagick | sh
+how -q convert png to jpg with imagemagick | sh
 ```
 
 ## Configuration
@@ -53,10 +53,10 @@ howdoi -q convert png to jpg with imagemagick | sh
 Initialize a config file:
 
 ```sh
-howdoi config init
+how config init
 ```
 
-This creates `~/.config/howdoi/config.yaml`:
+This creates `~/.config/how/config.yaml`:
 
 ```yaml
 provider: anthropic
@@ -86,7 +86,7 @@ For **Ollama**, no API key is needed — just have Ollama running locally.
 ### View current config
 
 ```sh
-howdoi config show
+how config show
 ```
 
 ## Development

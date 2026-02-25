@@ -7,7 +7,7 @@ import (
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
-	"github.com/swibrow/howdoi/internal/config"
+	"github.com/swibrow/how/internal/config"
 )
 
 type Anthropic struct {
@@ -17,7 +17,7 @@ type Anthropic struct {
 
 func NewAnthropic(cfg config.AnthropicConfig) (*Anthropic, error) {
 	if cfg.APIKey == "" {
-		return nil, fmt.Errorf("anthropic API key not set (set ANTHROPIC_API_KEY or configure in ~/.config/howdoi/config.yaml)")
+		return nil, fmt.Errorf("anthropic API key not set (set ANTHROPIC_API_KEY or configure in ~/.config/how/config.yaml)")
 	}
 
 	client := anthropic.NewClient(option.WithAPIKey(cfg.APIKey))

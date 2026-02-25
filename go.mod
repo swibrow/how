@@ -1,4 +1,4 @@
-module github.com/swibrow/howdoi
+module github.com/swibrow/how
 
 go 1.25.0
 

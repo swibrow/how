@@ -3,7 +3,7 @@
 all: lint test build
 
 build:
-	go build -o howdoi .
+	go build -o how .
 
 test:
 	go test -race ./...
@@ -22,7 +22,7 @@ vet:
 	go vet ./...
 
 clean:
-	rm -f howdoi coverage.out
+	rm -f how coverage.out
 
 install:
 	go install .

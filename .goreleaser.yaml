@@ -1,7 +1,7 @@
 version: 2
 
 builds:
-  - binary: howdoi
+  - binary: how
     env:
       - CGO_ENABLED=0
     goos:
@@ -25,13 +25,13 @@ brews:
   - repository:
       owner: swibrow
       name: homebrew-tap
-    homepage: https://github.com/swibrow/howdoi
+    homepage: https://github.com/swibrow/how
     description: "Smart terminal cheatsheet — ask a question, get a command"
     license: "MIT"
     install: |
-      bin.install "howdoi"
+      bin.install "how"
     test: |
-      system "#{bin}/howdoi", "--help"
+      system "#{bin}/how", "--help"
 
 changelog:
   sort: asc

@@ -56,7 +56,7 @@ func DefaultConfig() *Config {
 }
 
 // ConfigDirFunc overrides the default config directory resolution.
-// When nil, the default (~/.config/howdoi) is used.
+// When nil, the default (~/.config/how) is used.
 // Tests set this to redirect config I/O to a temp directory.
 var ConfigDirFunc func() (string, error)
 
@@ -68,7 +68,7 @@ func ConfigDir() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("getting home directory: %w", err)
 	}
-	return filepath.Join(home, ".config", "howdoi"), nil
+	return filepath.Join(home, ".config", "how"), nil
 }
 
 func configPath() (string, error) {

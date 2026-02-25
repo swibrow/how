@@ -7,11 +7,11 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/swibrow/howdoi/internal/config"
-	"github.com/swibrow/howdoi/internal/llm"
-	"github.com/swibrow/howdoi/internal/memory"
-	"github.com/swibrow/howdoi/internal/prompt"
-	"github.com/swibrow/howdoi/internal/ui"
+	"github.com/swibrow/how/internal/config"
+	"github.com/swibrow/how/internal/llm"
+	"github.com/swibrow/how/internal/memory"
+	"github.com/swibrow/how/internal/prompt"
+	"github.com/swibrow/how/internal/ui"
 )
 
 var (
@@ -21,7 +21,7 @@ var (
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use:           "howdoi [question]",
+		Use:           "how [question]",
 		Short:         "Smart terminal cheatsheet — ask a question, get a command",
 		Long:          "Ask a natural language question and get back a shell command with explanation.",
 		Args:          cobra.MinimumNArgs(1),
@@ -59,7 +59,7 @@ func main() {
 			if err := config.Save(cfg); err != nil {
 				return fmt.Errorf("saving config: %w", err)
 			}
-			fmt.Println("Default config created at ~/.config/howdoi/config.yaml")
+			fmt.Println("Default config created at ~/.config/how/config.yaml")
 			fmt.Println("Edit it to add your API keys and select a provider.")
 			return nil
 		},
