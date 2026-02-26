@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,6 +14,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed' && !startsWith(github.head_ref, 'release-please--')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -24,6 +27,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed' && !startsWith(github.head_ref, 'release-please--')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -31,15 +35,13 @@ jobs:
           go-version: "1.25.x"
       - name: Run tests
         run: go test -race -coverprofile=coverage.out ./...
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage.out
+      - name: Check coverage
+        run: go tool cover -func=coverage.out | tail -1
 
   build:
     name: Build
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed' && !startsWith(github.head_ref, 'release-please--')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
