@@ -26,6 +26,7 @@ brews:
   - repository:
       owner: swibrow
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     homepage: https://github.com/swibrow/how
     description: "Smart terminal cheatsheet — ask a question, get a command"
     license: "MIT"
