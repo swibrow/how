@@ -62,7 +62,7 @@ This creates `~/.config/how/config.yaml`:
 provider: anthropic
 anthropic:
   api_key: ""
-  model: claude-sonnet-4-5-20250929
+  model: claude-sonnet-4-6
 openai:
   api_key: ""
   model: gpt-4o

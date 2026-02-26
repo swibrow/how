@@ -18,7 +18,7 @@ func TestDefaultConfig(t *testing.T) {
 	if cfg.Provider != "anthropic" {
 		t.Errorf("expected default provider 'anthropic', got %q", cfg.Provider)
 	}
-	if cfg.Anthropic.Model != "claude-sonnet-4-5-20250929" {
+	if cfg.Anthropic.Model != "claude-sonnet-4-6" {
 		t.Errorf("unexpected anthropic model: %q", cfg.Anthropic.Model)
 	}
 	if cfg.OpenAI.Model != "gpt-4o" {

@@ -40,7 +40,7 @@ func DefaultConfig() *Config {
 	return &Config{
 		Provider: "anthropic",
 		Anthropic: AnthropicConfig{
-			Model: "claude-sonnet-4-5-20250929",
+			Model: "claude-sonnet-4-6",
 		},
 		OpenAI: OpenAIConfig{
 			Model: "gpt-4o",
