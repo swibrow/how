@@ -14,11 +14,6 @@ type Config struct {
 	Anthropic    AnthropicConfig `yaml:"anthropic"`
 	OpenAI       OpenAIConfig    `yaml:"openai"`
 	Ollama       OllamaConfig    `yaml:"ollama"`
-	Memory       MemoryConfig    `yaml:"memory"`
-}
-
-type MemoryConfig struct {
-	Enabled bool `yaml:"enabled"`
 }
 
 type AnthropicConfig struct {
@@ -48,9 +43,6 @@ func DefaultConfig() *Config {
 		Ollama: OllamaConfig{
 			Model: "llama3",
 			URL:   "http://localhost:11434/v1",
-		},
-		Memory: MemoryConfig{
-			Enabled: true,
 		},
 	}
 }

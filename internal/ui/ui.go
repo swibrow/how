@@ -102,16 +102,14 @@ func DisplayError(msg string) {
 }
 
 // ConfirmAndRun prompts the user to run the command and executes it.
-// Returns (true, nil) if confirmed and succeeded, (true, err) if confirmed
-// but the command failed, and (false, nil) if the user declined.
-func ConfirmAndRun(command string) (bool, error) {
+func ConfirmAndRun(command string) error {
 	fmt.Printf("  Run this command? [y/N] ")
 
 	fd := int(os.Stdin.Fd())
 	oldState, err := term.MakeRaw(fd)
 	if err != nil {
 		// Not a terminal (e.g. piped input) — can't use raw mode
-		return false, nil
+		return nil
 	}
 
 	var buf [1]byte
@@ -120,14 +118,14 @@ func ConfirmAndRun(command string) (bool, error) {
 	fmt.Println() // move to next line after the keypress
 
 	if err != nil {
-		return false, fmt.Errorf("reading input: %w", err)
+		return fmt.Errorf("reading input: %w", err)
 	}
 
 	if buf[0] != 'y' && buf[0] != 'Y' {
-		return false, nil
+		return nil
 	}
 
-	return true, RunCommand(command)
+	return RunCommand(command)
 }
 
 // RunCommand executes a command via the shell.

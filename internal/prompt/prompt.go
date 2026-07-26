@@ -1,11 +1,7 @@
 package prompt
 
 import (
-	"fmt"
 	"runtime"
-	"strings"
-
-	"github.com/swibrow/how/internal/memory"
 )
 
 const baseSystemPrompt = `You are a terminal command expert. The user will ask how to do something on the command line. Respond with the most appropriate command and a brief explanation.
@@ -47,25 +43,6 @@ func SystemPrompt(customPrompt string) string {
 		return base
 	}
 	return base + "\n- " + osHint
-}
-
-// FormatMemoryContext formats past interactions as context for the LLM prompt.
-func FormatMemoryContext(interactions []memory.Interaction) string {
-	if len(interactions) == 0 {
-		return ""
-	}
-
-	var b strings.Builder
-	b.WriteString("\nThe user has previously run these commands successfully:\n")
-	for _, ix := range interactions {
-		fmt.Fprintf(&b, "- Q: %s → $ %s", ix.Question, ix.Command)
-		if ix.UseCount > 1 {
-			fmt.Fprintf(&b, " (used %d times)", ix.UseCount)
-		}
-		b.WriteString("\n")
-	}
-	b.WriteString("Consider these patterns when suggesting commands.\n")
-	return b.String()
 }
 
 func osContext() string {

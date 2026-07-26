@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/swibrow/how/internal/config"
 	"github.com/swibrow/how/internal/llm"
-	"github.com/swibrow/how/internal/memory"
 	"github.com/swibrow/how/internal/prompt"
 	"github.com/swibrow/how/internal/ui"
 )
@@ -65,79 +64,12 @@ func main() {
 		},
 	}
 
-	memoryCmd := &cobra.Command{
-		Use:   "memory",
-		Short: "Manage command memory",
-	}
-
-	memoryListCmd := &cobra.Command{
-		Use:   "list",
-		Short: "List remembered commands",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			store, err := openMemoryStore()
-			if err != nil {
-				return err
-			}
-			defer store.Close() //nolint:errcheck
-
-			interactions, err := store.List(context.Background(), 20)
-			if err != nil {
-				return fmt.Errorf("listing memory: %w", err)
-			}
-
-			if len(interactions) == 0 {
-				fmt.Println("No remembered commands yet.")
-				return nil
-			}
-
-			for _, ix := range interactions {
-				fmt.Printf("  Q: %s\n  $ %s\n", ix.Question, ix.Command)
-				if ix.UseCount > 1 {
-					fmt.Printf("  (used %d times)\n", ix.UseCount)
-				}
-				fmt.Println()
-			}
-			return nil
-		},
-	}
-
-	memoryClearCmd := &cobra.Command{
-		Use:   "clear",
-		Short: "Clear all remembered commands",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			store, err := openMemoryStore()
-			if err != nil {
-				return err
-			}
-			defer store.Close() //nolint:errcheck
-
-			if err := store.Clear(context.Background()); err != nil {
-				return fmt.Errorf("clearing memory: %w", err)
-			}
-			fmt.Println("Memory cleared.")
-			return nil
-		},
-	}
-
-	memoryCmd.AddCommand(memoryListCmd, memoryClearCmd)
 	configCmd.AddCommand(configShowCmd, configInitCmd)
-	rootCmd.AddCommand(configCmd, memoryCmd)
+	rootCmd.AddCommand(configCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
-}
-
-func openMemoryStore() (*memory.Store, error) {
-	dir, err := config.ConfigDir()
-	if err != nil {
-		return nil, fmt.Errorf("config directory: %w", err)
-	}
-	store, err := memory.Open(dir)
-	if err != nil {
-		return nil, fmt.Errorf("opening memory: %w", err)
-	}
-	return store, nil
 }
 
 func run(cmd *cobra.Command, args []string) error {
@@ -149,25 +81,7 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// Open memory store (non-fatal on failure)
-	var store *memory.Store
-	if cfg.Memory.Enabled {
-		store, err = openMemoryStore()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: memory disabled: %v\n", err)
-		} else {
-			defer store.Close() //nolint:errcheck
-		}
-	}
-
-	// Build system prompt, enriching with memory context if available
 	ctx := context.Background()
-	sysPrompt := prompt.SystemPrompt(cfg.SystemPrompt)
-	if store != nil {
-		if past, err := store.Search(ctx, question, 10); err == nil && len(past) > 0 {
-			sysPrompt += prompt.FormatMemoryContext(past)
-		}
-	}
 
 	provider, err := llm.NewProvider(cfg)
 	if err != nil {
@@ -175,7 +89,7 @@ func run(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	response, err := provider.Complete(ctx, sysPrompt, question)
+	response, err := provider.Complete(ctx, prompt.SystemPrompt(cfg.SystemPrompt), question)
 	if err != nil {
 		ui.DisplayError(fmt.Sprintf("LLM request failed: %v", err))
 		return err
@@ -199,16 +113,8 @@ func run(cmd *cobra.Command, args []string) error {
 	ui.Display(result)
 
 	if flagYes {
-		err := ui.RunCommand(result.Command)
-		if err == nil && store != nil {
-			_ = store.Save(ctx, question, result.Command, result.Explanation)
-		}
-		return err
+		return ui.RunCommand(result.Command)
 	}
 
-	confirmed, err := ui.ConfirmAndRun(result.Command)
-	if confirmed && err == nil && store != nil {
-		_ = store.Save(ctx, question, result.Command, result.Explanation)
-	}
-	return err
+	return ui.ConfirmAndRun(result.Command)
 }
