@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.0.0](https://github.com/swibrow/how/compare/v1.0.1...v2.0.0) (2026-07-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove command memory
+
+### Features
+
+* validate suggested commands exist before presenting to user ([4676ba1](https://github.com/swibrow/how/commit/4676ba1fbb7eea2b0ffeac16208a15d29ef47269))
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/anthropics/anthropic-sdk-go to v1.26.0 ([#4](https://github.com/swibrow/how/issues/4)) ([ef2af8c](https://github.com/swibrow/how/commit/ef2af8cdb92fba7ca9de1419d09ae567b476e86c))
+* **deps:** update module modernc.org/sqlite to v1.52.0 ([#22](https://github.com/swibrow/how/issues/22)) ([9497d9f](https://github.com/swibrow/how/commit/9497d9f88c70c5d636b51b8c97dfbfbc2fbe45dc))
+* **deps:** update module modernc.org/sqlite to v1.54.0 ([#24](https://github.com/swibrow/how/issues/24)) ([3ec4ce5](https://github.com/swibrow/how/commit/3ec4ce583dd1556edf71a463e162d52006ee3603))
+* handle LLM responses missing COMMAND: prefix ([26a21c5](https://github.com/swibrow/how/commit/26a21c5773f2e4a1b410b91a6a359d14218c3bee))
+
+
+### Code Refactoring
+
+* remove command memory ([f015a8d](https://github.com/swibrow/how/commit/f015a8db53649643138421c0bbfe7fcd84a3adbf))
+
 ## [1.0.1](https://github.com/swibrow/how/compare/v1.0.0...v1.0.1) (2026-02-26)
 
 
