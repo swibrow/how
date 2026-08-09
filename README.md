@@ -22,7 +22,7 @@ $ how find all go files modified in the last 24 hours
 ### Homebrew
 
 ```sh
-brew install swibrow/tap/how
+brew install --cask swibrow/tap/how
 ```
 
 ### From source
