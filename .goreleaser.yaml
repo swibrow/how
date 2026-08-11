@@ -22,19 +22,22 @@ archives:
       - goos: windows
         format: zip
 
-brews:
+homebrew_casks:
   - repository:
       owner: swibrow
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    directory: Formula
+    directory: Casks
     homepage: https://github.com/swibrow/how
     description: "Smart terminal cheatsheet — ask a question, get a command"
-    license: "MIT"
-    install: |
-      bin.install "how"
-    test: |
-      system "#{bin}/how", "--help"
+    binaries:
+      - how
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/how"]
+          end
 
 changelog:
   sort: asc

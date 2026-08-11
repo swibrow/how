@@ -22,7 +22,7 @@ $ how find all go files modified in the last 24 hours
 ### Homebrew
 
 ```sh
-brew install swibrow/tap/how
+brew install --cask swibrow/tap/how
 ```
 
 ### From source
@@ -99,11 +99,11 @@ how config show
 ### Build & test
 
 ```sh
-make          # lint + test + build
-make test     # run tests with race detector
-make lint     # run linters
-make coverage # generate coverage report
-make build    # compile binary
+just          # lint + test + build
+just test     # run tests with race detector
+just lint     # run linters
+just coverage # generate coverage report
+just build    # compile binary
 ```
 
 ## License
