@@ -58,3 +58,16 @@ func TestNewProviderOllama(t *testing.T) {
 		t.Fatal("expected non-nil provider for ollama")
 	}
 }
+
+func TestNewProviderLiteLLM(t *testing.T) {
+	cfg := config.DefaultConfig()
+	cfg.Provider = "litellm"
+
+	provider, err := NewProvider(cfg)
+	if err != nil {
+		t.Fatalf("expected no error for litellm, got: %v", err)
+	}
+	if provider == nil {
+		t.Fatal("expected non-nil provider for litellm")
+	}
+}

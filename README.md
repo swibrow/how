@@ -12,7 +12,7 @@ $ how find all go files modified in the last 24 hours
 ## Features
 
 - Natural language to shell command translation
-- Multiple LLM backends: **Anthropic**, **OpenAI**, and **Ollama** (local)
+- Multiple LLM backends: **Anthropic**, **OpenAI**, **Ollama** (local), and **LiteLLM** (proxy)
 - Clean, colorized terminal output
 - Quiet mode for piping (`-q`)
 - Optional auto-execution (`-y`)
@@ -69,6 +69,10 @@ openai:
 ollama:
   model: llama3
   url: http://localhost:11434/v1
+litellm:
+  api_key: ""
+  model: gpt-3.5-turbo
+  url: http://localhost:4000
 ```
 
 ### API keys
@@ -79,9 +83,14 @@ Set via environment variables (recommended) or in the config file:
 export ANTHROPIC_API_KEY=sk-...
 # or
 export OPENAI_API_KEY=sk-...
+# or
+export LITELLM_API_KEY=sk-...
 ```
 
 For **Ollama**, no API key is needed — just have Ollama running locally.
+
+For **LiteLLM**, point `url` at your proxy (e.g. `how config init` then edit `~/.config/how/config.yaml`,
+set `provider: litellm`). An API key is only required if your proxy has a `master_key` configured.
 
 ### View current config
 

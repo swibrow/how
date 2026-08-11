@@ -21,6 +21,8 @@ func NewProvider(cfg *config.Config) (Provider, error) {
 		return NewOpenAI(cfg.OpenAI)
 	case "ollama":
 		return NewOllama(cfg.Ollama)
+	case "litellm":
+		return NewLiteLLM(cfg.LiteLLM)
 	default:
 		return nil, fmt.Errorf("unknown provider: %s", cfg.Provider)
 	}
