@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/swibrow/how/compare/v2.0.0...v2.1.0) (2026-08-12)
+
+
+### Features
+
+* add litellm provider ([#28](https://github.com/swibrow/how/issues/28)) ([ae3df23](https://github.com/swibrow/how/commit/ae3df2367218a1b77e5ca563ef70413e95893d47))
+
+
+### Bug Fixes
+
+* **release:** migrate Homebrew publishing to cask, migrate Makefile to justfile ([#26](https://github.com/swibrow/how/issues/26)) ([2908deb](https://github.com/swibrow/how/commit/2908debcfc91d336a471d4588047a182342a419f))
+
 ## [2.0.0](https://github.com/swibrow/how/compare/v1.0.1...v2.0.0) (2026-07-26)
 
 
