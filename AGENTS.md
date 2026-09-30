@@ -1,13 +1,13 @@
 # how
 
 Smart terminal cheatsheet: a Go CLI that turns a natural-language question into a
-shell command via an LLM (Anthropic, OpenAI, or local Ollama).
+shell command via an LLM (Anthropic, OpenAI, local Ollama, or any OpenAI-compatible gateway).
 
 ## Layout
 
 - `cmd/how/main.go` — cobra CLI entrypoint (`how [question]`, `how config show|init`)
 - `internal/config` — loads/saves `~/.config/how/config.yaml`, env vars override file
-- `internal/llm` — `Provider` interface with `Anthropic`, `OpenAI`, `Ollama` implementations
+- `internal/llm` — `Provider` interface with `Anthropic`, `OpenAI`, `Ollama`, `LLM` (generic OpenAI-compatible gateway) implementations
 - `internal/prompt` — system prompt, OS-specific hints appended at runtime
 - `internal/ui` — response parsing, terminal display (lipgloss), command execution/confirmation
 
@@ -29,5 +29,5 @@ not through `just` — keep both in sync if you change build steps.
 ## Conventions
 
 - Provider implementations satisfy `llm.Provider` (`Complete(ctx, systemPrompt, userQuery) (string, error)`).
-- Config: env vars (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`) take precedence over the YAML file.
+- Config: env vars (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `LLM_API_KEY`) take precedence over the YAML file.
 - Versioning is automated via release-please + goreleaser (Conventional Commits drive version bumps).

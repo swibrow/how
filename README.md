@@ -12,7 +12,7 @@ $ how find all go files modified in the last 24 hours
 ## Features
 
 - Natural language to shell command translation
-- Multiple LLM backends: **Anthropic**, **OpenAI**, **Ollama** (local), and **LiteLLM** (proxy)
+- Multiple LLM backends: **Anthropic**, **OpenAI**, **Ollama** (local), and any **OpenAI-compatible gateway** (`llm`)
 - Clean, colorized terminal output
 - Quiet mode for piping (`-q`)
 - Optional auto-execution (`-y`)
@@ -69,10 +69,10 @@ openai:
 ollama:
   model: llama3
   url: http://localhost:11434/v1
-litellm:
+llm:
   api_key: ""
   model: gpt-3.5-turbo
-  url: http://localhost:4000
+  url: http://localhost:4000/v1
 ```
 
 ### API keys
@@ -84,13 +84,17 @@ export ANTHROPIC_API_KEY=sk-...
 # or
 export OPENAI_API_KEY=sk-...
 # or
-export LITELLM_API_KEY=sk-...
+export LLM_API_KEY=sk-...
 ```
 
 For **Ollama**, no API key is needed — just have Ollama running locally.
 
-For **LiteLLM**, point `url` at your proxy (e.g. `how config init` then edit `~/.config/how/config.yaml`,
-set `provider: litellm`). An API key is only required if your proxy has a `master_key` configured.
+For any other **OpenAI-compatible gateway** (agentgateway, LiteLLM, vLLM, ...), set `provider: llm` and point
+`url` at the gateway's OpenAI base URL, including the version prefix (e.g. `https://llm.example.com/v1`).
+`how` sends requests to `<url>/chat/completions`. An API key is only required if the gateway enforces auth.
+
+> The `litellm` provider was renamed to `llm` in v3. Rename `provider: litellm` and the `litellm:` section to
+> `llm`, add `/v1` to `url` if your gateway needs it, and use `LLM_API_KEY` instead of `LITELLM_API_KEY`.
 
 ### View current config
 

@@ -6,10 +6,10 @@ import (
 	"github.com/swibrow/how/internal/config"
 )
 
-func NewLiteLLM(cfg config.LiteLLMConfig) (Provider, error) {
+func NewLLM(cfg config.LLMConfig) (Provider, error) {
 	apiKey := cfg.APIKey
 	if apiKey == "" {
-		apiKey = "anything" // litellm proxy accepts any key unless a master_key is configured
+		apiKey = "anything" // gateways without auth still require the SDK to send some key
 	}
 
 	client := openai.NewClient(
@@ -17,5 +17,5 @@ func NewLiteLLM(cfg config.LiteLLMConfig) (Provider, error) {
 		option.WithAPIKey(apiKey),
 	)
 
-	return &openAICompatible{client: &client, model: cfg.Model, name: "litellm"}, nil
+	return &openAICompatible{client: &client, model: cfg.Model, name: "llm"}, nil
 }

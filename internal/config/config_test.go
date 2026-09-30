@@ -30,11 +30,11 @@ func TestDefaultConfig(t *testing.T) {
 	if cfg.Ollama.URL != "http://localhost:11434/v1" {
 		t.Errorf("unexpected ollama URL: %q", cfg.Ollama.URL)
 	}
-	if cfg.LiteLLM.Model != "gpt-3.5-turbo" {
-		t.Errorf("unexpected litellm model: %q", cfg.LiteLLM.Model)
+	if cfg.LLM.Model != "gpt-3.5-turbo" {
+		t.Errorf("unexpected llm model: %q", cfg.LLM.Model)
 	}
-	if cfg.LiteLLM.URL != "http://localhost:4000" {
-		t.Errorf("unexpected litellm URL: %q", cfg.LiteLLM.URL)
+	if cfg.LLM.URL != "http://localhost:4000/v1" {
+		t.Errorf("unexpected llm URL: %q", cfg.LLM.URL)
 	}
 }
 
@@ -89,7 +89,7 @@ func TestEnvVarOverride(t *testing.T) {
 
 	t.Setenv("ANTHROPIC_API_KEY", "env-anthropic-key")
 	t.Setenv("OPENAI_API_KEY", "env-openai-key")
-	t.Setenv("LITELLM_API_KEY", "env-litellm-key")
+	t.Setenv("LLM_API_KEY", "env-llm-key")
 
 	loaded, err := Load()
 	if err != nil {
@@ -102,8 +102,8 @@ func TestEnvVarOverride(t *testing.T) {
 	if loaded.OpenAI.APIKey != "env-openai-key" {
 		t.Errorf("openai key: got %q, want %q", loaded.OpenAI.APIKey, "env-openai-key")
 	}
-	if loaded.LiteLLM.APIKey != "env-litellm-key" {
-		t.Errorf("litellm key: got %q, want %q", loaded.LiteLLM.APIKey, "env-litellm-key")
+	if loaded.LLM.APIKey != "env-llm-key" {
+		t.Errorf("llm key: got %q, want %q", loaded.LLM.APIKey, "env-llm-key")
 	}
 }
 
@@ -156,6 +156,6 @@ func TestMain(m *testing.M) {
 	// Ensure tests don't accidentally use real env vars
 	os.Unsetenv("ANTHROPIC_API_KEY")
 	os.Unsetenv("OPENAI_API_KEY")
-	os.Unsetenv("LITELLM_API_KEY")
+	os.Unsetenv("LLM_API_KEY")
 	os.Exit(m.Run())
 }
