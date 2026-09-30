@@ -8,11 +8,11 @@ import (
 )
 
 // openAICompatible implements Provider for any backend that speaks the
-// OpenAI chat completions API (OpenAI itself, Ollama, LiteLLM, etc).
+// OpenAI chat completions API (OpenAI itself, Ollama, generic gateways, etc).
 type openAICompatible struct {
 	client *openai.Client
 	model  string
-	name   string // used in error messages, e.g. "openai", "ollama", "litellm"
+	name   string // used in error messages, e.g. "openai", "ollama", "llm"
 }
 
 func (p *openAICompatible) Complete(ctx context.Context, systemPrompt, userQuery string) (string, error) {

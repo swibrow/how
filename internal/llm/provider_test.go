@@ -59,15 +59,28 @@ func TestNewProviderOllama(t *testing.T) {
 	}
 }
 
-func TestNewProviderLiteLLM(t *testing.T) {
+func TestNewProviderLLM(t *testing.T) {
 	cfg := config.DefaultConfig()
-	cfg.Provider = "litellm"
+	cfg.Provider = "llm"
 
 	provider, err := NewProvider(cfg)
 	if err != nil {
-		t.Fatalf("expected no error for litellm, got: %v", err)
+		t.Fatalf("expected no error for llm, got: %v", err)
 	}
 	if provider == nil {
-		t.Fatal("expected non-nil provider for litellm")
+		t.Fatal("expected non-nil provider for llm")
+	}
+}
+
+func TestNewProviderLiteLLMRenamed(t *testing.T) {
+	cfg := config.DefaultConfig()
+	cfg.Provider = "litellm"
+
+	_, err := NewProvider(cfg)
+	if err == nil {
+		t.Fatal("expected error for removed litellm provider, got nil")
+	}
+	if !strings.Contains(err.Error(), `renamed to "llm"`) {
+		t.Errorf("expected rename hint in error, got: %v", err)
 	}
 }

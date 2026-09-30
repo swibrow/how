@@ -14,7 +14,7 @@ type Config struct {
 	Anthropic    AnthropicConfig `yaml:"anthropic"`
 	OpenAI       OpenAIConfig    `yaml:"openai"`
 	Ollama       OllamaConfig    `yaml:"ollama"`
-	LiteLLM      LiteLLMConfig   `yaml:"litellm"`
+	LLM          LLMConfig       `yaml:"llm"`
 }
 
 type AnthropicConfig struct {
@@ -32,7 +32,7 @@ type OllamaConfig struct {
 	URL   string `yaml:"url"`
 }
 
-type LiteLLMConfig struct {
+type LLMConfig struct {
 	APIKey string `yaml:"api_key"`
 	Model  string `yaml:"model"`
 	URL    string `yaml:"url"`
@@ -51,9 +51,9 @@ func DefaultConfig() *Config {
 			Model: "llama3",
 			URL:   "http://localhost:11434/v1",
 		},
-		LiteLLM: LiteLLMConfig{
+		LLM: LLMConfig{
 			Model: "gpt-3.5-turbo",
-			URL:   "http://localhost:4000",
+			URL:   "http://localhost:4000/v1",
 		},
 	}
 }
@@ -109,8 +109,8 @@ func Load() (*Config, error) {
 	if key := os.Getenv("OPENAI_API_KEY"); key != "" {
 		cfg.OpenAI.APIKey = key
 	}
-	if key := os.Getenv("LITELLM_API_KEY"); key != "" {
-		cfg.LiteLLM.APIKey = key
+	if key := os.Getenv("LLM_API_KEY"); key != "" {
+		cfg.LLM.APIKey = key
 	}
 
 	return cfg, nil

@@ -2,6 +2,7 @@ package llm
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/swibrow/how/internal/config"
@@ -21,8 +22,10 @@ func NewProvider(cfg *config.Config) (Provider, error) {
 		return NewOpenAI(cfg.OpenAI)
 	case "ollama":
 		return NewOllama(cfg.Ollama)
+	case "llm":
+		return NewLLM(cfg.LLM)
 	case "litellm":
-		return NewLiteLLM(cfg.LiteLLM)
+		return nil, errors.New(`provider "litellm" was renamed to "llm": set provider: llm, rename the litellm: config section to llm:, and use LLM_API_KEY instead of LITELLM_API_KEY`)
 	default:
 		return nil, fmt.Errorf("unknown provider: %s", cfg.Provider)
 	}
