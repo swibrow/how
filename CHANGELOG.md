@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/swibrow/how/compare/v2.1.0...v3.0.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **llm:** the `litellm` provider is now `llm`. Rename `provider: litellm` and the `litellm:` config section to `llm`, and use LLM_API_KEY instead of LITELLM_API_KEY. Configuring `provider: litellm` now fails with an error that explains the rename.
+
+### Code Refactoring
+
+* **llm:** rename litellm provider to generic llm provider ([e83be85](https://github.com/swibrow/how/commit/e83be8591a324003dedce51be4a0700faa4fe98f))
+
 ## [2.1.0](https://github.com/swibrow/how/compare/v2.0.0...v2.1.0) (2026-08-12)
 
 
